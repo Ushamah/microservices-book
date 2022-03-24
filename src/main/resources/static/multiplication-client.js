@@ -11,6 +11,20 @@ function updateMultiplication() {
     });
 }
 
+function updateStats(alias) {
+    $.ajax({
+        url: "http://localhost:8080/results?alias=" + alias,
+    }).then(function(data) {
+        $('#stats-body').empty();
+        data.forEach(function(row) {
+            $('#stats-body').append('<tr><th scope="row"><td>' + row.id + '</td></th>' +
+                '<th scope="row"><td>' + row.multiplication.factorA + ' x ' + row.multiplication.factorB + '</td></th>' +
+                '<th scope="row"><td>' + row.resultAttempt + '</td></th>' +
+                '<th scope="row"><td>' + (row.correct === true ? 'YES'.fontcolor('green') : 'NO'.fontcolor('red')) + '</td></th></tr>');
+        });
+    });
+}
+
 $(document).ready(function() {
 
     updateMultiplication();
@@ -37,6 +51,7 @@ $(document).ready(function() {
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
+            async: false,
             success: function(result){
                 if(result.correct) {
                     $('.result-message').empty().append("The result is correct! Congratulations!");
@@ -47,5 +62,7 @@ $(document).ready(function() {
         });
 
         updateMultiplication();
+
+        updateStats(userAlias);
     });
 });

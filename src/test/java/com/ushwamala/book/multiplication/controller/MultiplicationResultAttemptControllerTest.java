@@ -36,7 +36,7 @@ public class MultiplicationResultAttemptControllerTest {
 
     // This object will be magically initialized by the initFields method below.
     private JacksonTester<MultiplicationResultAttempt> jsonResult;
-    private JacksonTester<ResultResponse> jsonResponse;
+    private JacksonTester<MultiplicationResultAttempt> jsonResponse;
 
     @Before
     public void setup() {
@@ -70,8 +70,13 @@ public class MultiplicationResultAttemptControllerTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo(
-                jsonResponse.write(new ResultResponse(correct)).getJson());
+
+        MultiplicationResultAttempt multiplicationResultAttempt = new MultiplicationResultAttempt(
+                attempt.getUser(),
+                attempt.getMultiplication(),
+                attempt.getResultAttempt(),
+                correct);
+        assertThat(response.getContentAsString()).isEqualTo(jsonResult.write(multiplicationResultAttempt).getJson());
     }
 
 }
