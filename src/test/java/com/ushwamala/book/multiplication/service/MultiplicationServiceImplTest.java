@@ -3,6 +3,8 @@ package com.ushwamala.book.multiplication.service;
 import com.ushwamala.book.multiplication.domain.Multiplication;
 import com.ushwamala.book.multiplication.domain.MultiplicationResultAttempt;
 import com.ushwamala.book.multiplication.domain.User;
+import com.ushwamala.book.multiplication.event.EventDispatcher;
+import com.ushwamala.book.multiplication.event.MultiplicationSolvedEvent;
 import com.ushwamala.book.multiplication.repository.MultiplicationResultAttemptRepository;
 import com.ushwamala.book.multiplication.repository.UserRepository;
 import org.assertj.core.util.Lists;
@@ -32,12 +34,15 @@ public class MultiplicationServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private EventDispatcher eventDispatcher;
+
     @Before
     public void setUp() {
         // With this call to initMocks we tell Mockito to process the annotations
         MockitoAnnotations.initMocks(this);
         multiplicationServiceImpl = new MultiplicationServiceImpl
-                (randomGeneratorService,attemptRepository,userRepository);
+                (randomGeneratorService,attemptRepository,userRepository, eventDispatcher);
     }
 
     @Test
@@ -70,6 +75,11 @@ public class MultiplicationServiceImplTest {
         // then
         assertThat(attemptResult).isTrue();
         verify(attemptRepository).save(verifiedAttempt);
+        verify(eventDispatcher).send(
+                new MultiplicationSolvedEvent(
+                        verifiedAttempt.getId(),
+                        verifiedAttempt.getUser().getId(),
+                        verifiedAttempt.isCorrect()));
     }
 
     @Test
