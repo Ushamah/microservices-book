@@ -4,6 +4,7 @@ import com.ushwamala.book.multiplication.domain.Multiplication;
 import com.ushwamala.book.multiplication.domain.MultiplicationResultAttempt;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface MultiplicationService {
@@ -30,4 +31,7 @@ public interface MultiplicationService {
      * @return a list of {@link MultiplicationResultAttempt} objects, being the past attempts of the user.
      */
     List<MultiplicationResultAttempt> getStatsForUser(final String userAlias);
+
+    Optional<MultiplicationResultAttempt> getById(Long id);
 }
+

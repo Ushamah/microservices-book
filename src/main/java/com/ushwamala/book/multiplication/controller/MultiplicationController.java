@@ -19,4 +19,5 @@ public class MultiplicationController {
         return multiplicationService.createRandomMultiplication();
     }
 
+    
 }
